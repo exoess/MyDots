@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+#  ___         _        _ _         
+# |_ _|_ _  __| |_ __ _| | |___ _ _ 
+#  | || ' \(_-<  _/ _` | | / -_) '_|
+# |___|_||_/__/\__\__,_|_|_\___|_|  
+#       Dots install script                  
+#   Author: exoess
+#       url: https://github.com/exoess
+
+CRE=$(tput setaf 1)
+CYE=$(tput setaf 3)
+CGR=$(tput setaf 2)
+CBL=$(tput setaf 4)
+BLD=$(tput bold)
+CNC=$(tput sgr0)
+
+backup_folder=~/.DotsBackup
+date=$(date +%Y%m%d-%H%M%S)
+
+logo () {
+	
+	local text="${1:?}"
+	echo -en "
+        ▓█████ ▒██   ██▒ ▒█████  ▓█████   ██████   ██████
+        ▓█   ▀ ▒▒ █ █ ▒░▒██▒  ██▒▓█   ▀ ▒██    ▒ ▒██    ▒
+        ▒███   ░░  █   ░▒██░  ██▒▒███   ░ ▓██▄   ░ ▓██▄
+        ▒▓█  ▄  ░ █ █ ▒ ▒██   ██░▒▓█  ▄   ▒   ██▒  ▒   ██▒
+        ░▒████▒▒██▒ ▒██▒░ ████▓▒░░▒████▒▒██████▒▒▒██████▒▒
+        ░░ ▒░ ░▒▒ ░ ░▓ ░░ ▒░▒░▒░ ░░ ▒░ ░▒ ▒▓▒ ▒ ░▒ ▒▓▒ ▒ ░
+         ░ ░  ░░░   ░▒ ░  ░ ▒ ▒░  ░ ░  ░░ ░▒  ░ ░░ ░▒  ░ ░
+           ░    ░    ░  ░ ░ ░ ▒     ░   ░  ░  ░  ░  ░  ░
+           ░  ░ ░    ░      ░ ░     ░  ░      ░        ░
+			    exoess Dots\n\n"
+    printf ' %s [%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
+}
+
+# -=- You must not run this as root -=- #
+
+if [ "$(id -u)" = 0 ]; then
+    echo "This script MUST NOT be run as root user."
+    exit 1
+fi
+
+# -=- Welcome -=- #
+
+logo "Welcome!"
+printf '%s%sThis script will check if you have the necessary dependencies, and if not, it will install them. Then, it will clone the DOTS in your HOME directory.\nAfter that, it will create a secure backup of your files, and then copy the new files to your computer.\n\nMy dotfiles DO NOT modify any of your system configurations.\nYou will be prompted for your root password to install missing dependencies and/or to switch to zsh shell if its not your default.\n\nThis script doesnt have the potential power to break your system, it only copies files from the repository to your HOME directory.%s\n\n' "${BLD}" "${CRE}" "${CNC}"
+
+while true; do
+	read -rp " Do you wish to continue? [y/N]: " yn
+		case $yn in
+			[Yy]* ) break;;
+			[Nn]* ) exit;;
+			* ) printf " Error: just write 'y' or 'n'\n\n";;
+		esac
+    done
+clear
+
+# -=- Install packages -=-
+
+logo "Installing needed packages.."
+
+dependencies=()
+
+is_installed() {
+  pacman -Qi "$1" &> /dev/null
+  return $?
+}
+
+printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
+for paquete in "${dependencias[@]}"
+do
+  if ! is_installed "$paquete"; then
+    sudo pacman -S "$paquete" --noconfirm
+    printf "\n"
+  else
+    printf '%s%s is already installed on your system!%s\n' "${CGR}" "$paquete" "${CNC}"
+    sleep 1
+  fi
+done
+sleep 3
+clear
+
+# -=- Preparing Folders -=- #
+
+logo "Preparing Folders"
+if [ ! -e $HOME/.config/user-dirs.dirs ]; then
+	xdg-user-dirs-update
+	echo "Creating xdg-user-dirs"
+else
+	echo "user-dirs.dirs already exists"
+fi
+sleep 2 
+clear
+
+# -=- Cloning the Dots! -=- #
+
+logo "Downloading dotfiles"
+[ -d ~/dotfiles ] && rm -rf ~/dotfiles
+printf "Cloning rice from https://github.com/exoess/MyDots\n"
+cd
+git clone --depth=1 https://github.com/exoess/MyDots.git
+sleep 2a
+clear
