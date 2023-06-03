@@ -44,7 +44,7 @@ fi
 # -=- Welcome -=- #
 
 logo "Welcome!"
-printf '%s%sThis script will check if you have the necessary dependencies, and if not, it will install them. Then, it will clone the DOTS in your HOME directory.\nAfter that, it will create a secure backup of your files, and then copy the new files to your computer.\n\nMy dotfiles DO NOT modify any of your system configurations.\nYou will be prompted for your root password to install missing dependencies and/or to switch to zsh shell if its not your default.\n\nThis script doesnt have the potential power to break your system, it only copies files from the repository to your HOME directory.%s\n\n' "${BLD}" "${CRE}" "${CNC}"
+printf '%s%sThis script will check if you have the necessary dependencies, and if not, it will install them. Then, it will clone the DOTS in your HOME directory.\nAfter that, it will create a secure backup of your files, and then copy the new files to your computer.\n\nMy dots DO NOT modify any of your system configurations.\nYou will be prompted for your root password to install missing dependencies and/or to switch to zsh shell if its not your default.\n\nThis script doesnt have the potential power to break your system, it only copies files from the repository to your HOME directory.%s\n\n' "${BLD}" "${CRE}" "${CNC}"
 
 while true; do
 	read -rp " Do you wish to continue? [y/N]: " yn
@@ -95,10 +95,146 @@ clear
 
 # -=- Cloning the Dots! -=- #
 
-logo "Downloading dotfiles"
-[ -d ~/dotfiles ] && rm -rf ~/dotfiles
-printf "Cloning rice from https://github.com/exoess/MyDots\n"
+logo "Downloading dots"
+[ -d ~/dots ] && rm -rf ~/dots
+printf "Cloning dots from https://github.com/exoess/MyDots\n"
 cd
 git clone --depth=1 https://github.com/exoess/MyDots.git
 sleep 2a
 clear
+
+# -=- Backup files -=- #
+
+logo "Backup files"
+printf "Backup files will be stored in %s%s%s/.DotsBackup%s \n\n" "${BLD}" "${CRE}" "$HOME" "${CNC}"
+sleep 10
+
+if [ ! -d "$backup_folder" ]; then
+  mkdir -p "$backup_folder"
+fi
+
+for folder in ; do
+  if [ -d "$HOME/.config/$folder" ]; then
+    mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date"
+    echo "$folder folder backed up successfully at $backup_folder/${folder}_$date"
+  else
+    echo "The folder $folder does not exist in $HOME/.config/"
+  fi
+done
+
+for folder in chrome; do
+  if [ -d "$HOME"/.mozilla/firefox/*.default-release/$folder ]; then
+    mv "$HOME"/.mozilla/firefox/*.default-release/$folder "$backup_folder"/${folder}_$date
+    echo "$folder folder backed up successfully at $backup_folder/${folder}_$date"
+  else
+    echo "The folder $folder does not exist in $HOME/.mozilla/firefox/"
+  fi
+done
+
+for file in user.js; do
+  if [ -e "$HOME"/.mozilla/firefox/*.default-release/$file ]; then
+    mv "$HOME"/.mozilla/firefox/*.default-release/$file "$backup_folder"/${file}_$date
+    echo "$file file backed up successfully at $backup_folder/${file}_$date"
+  else
+    echo "The file $file does not exist in $HOME/.mozilla/firefox/"
+  fi
+done
+
+[ -f ~/.zshrc ] && mv ~/.zshrc ~/.DotsBackup/.zshrc-backup-"$(date +%Y.%m.%d-%H.%M.%S)"
+
+printf "%s%sDone!!%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 5
+
+# -=- Copy the Dots! -=- #
+
+logo "Installing dots.."
+printf "Copying files to respective directories..\n"
+
+[ ! -d ~/.config ] && mkdir -p ~/.config
+[ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
+[ ! -d ~/.local/share/applications ] && mkdir -p ~/.local/share/applications
+[ ! -d ~/.local/share/fonts ] && mkdir -p ~/.local/share/fonts
+[ ! -d ~/.local/share/asciiart ] && mkdir -p ~/.local/share/asciiart
+
+for archivos in ~/dots/config/*; do
+  cp -R "${archivos}" ~/.config/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+
+for archivos in ~/dots/misc/bin/*; do
+  cp -R "${archivos}" ~/.local/bin/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+
+for archivos in ~/dots/misc/applications/*; do
+  cp -R "${archivos}" ~/.local/share/applications/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+
+for archivos in ~/dots/misc/fonts/*; do
+  cp -R "${archivos}" ~/.local/share/fonts/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+
+for archivos in ~/dots/misc/asciiart/*; do
+  cp -R "${archivos}" ~/.local/share/asciiart/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+
+for archivos in ~/dots/misc/firefox/*; do
+  cp -R "${archivos}" ~/.mozilla/firefox/*.default-release/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+
+cp -f "$HOME"/dots/home/.zshrc "$HOME"
+fc-cache -rv >/dev/null 2>&1
+printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 3
+
+# -=- Changing shell to zsh -=- #
+
+logo "Changing default shell to zsh"
+printf "%s%sIf your shell is not zsh will be changed now.\nYour root password is needed to make the change.\n\nAfter that is important for you to reboot.\n %s\n" "${BLD}" "${CYE}" "${CNC}"
+if [[ $SHELL != "/usr/bin/zsh" ]]; then
+  echo "Changing shell to zsh, your root pass is needed."
+  chsh -s /usr/bin/zsh
+else
+  printf "%s%sYour shell is already zsh\nGood bye! installation finished, now reboot%s\n" "${BLD}" "${CGR}" "${CNC}"
+  zsh
+fi
