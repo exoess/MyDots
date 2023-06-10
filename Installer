@@ -21,15 +21,7 @@ logo () {
 	
 	local text="${1:?}"
 	echo -en "
-        ▓█████ ▒██   ██▒ ▒█████  ▓█████   ██████   ██████
-        ▓█   ▀ ▒▒ █ █ ▒░▒██▒  ██▒▓█   ▀ ▒██    ▒ ▒██    ▒
-        ▒███   ░░  █   ░▒██░  ██▒▒███   ░ ▓██▄   ░ ▓██▄
-        ▒▓█  ▄  ░ █ █ ▒ ▒██   ██░▒▓█  ▄   ▒   ██▒  ▒   ██▒
-        ░▒████▒▒██▒ ▒██▒░ ████▓▒░░▒████▒▒██████▒▒▒██████▒▒
-        ░░ ▒░ ░▒▒ ░ ░▓ ░░ ▒░▒░▒░ ░░ ▒░ ░▒ ▒▓▒ ▒ ░▒ ▒▓▒ ▒ ░
-         ░ ░  ░░░   ░▒ ░  ░ ▒ ▒░  ░ ░  ░░ ░▒  ░ ░░ ░▒  ░ ░
-           ░    ░    ░  ░ ░ ░ ▒     ░   ░  ░  ░  ░  ░  ░
-           ░  ░ ░    ░      ░ ░     ░  ░      ░        ░
+
 			    exoess Dots\n\n"
     printf ' %s [%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
 }
@@ -60,7 +52,9 @@ clear
 
 logo "Installing needed packages.."
 
-dependencies=()
+dependencies=(papirus-icon-theme pulseaudio-alsa)
+
+aurdependencies=(awesome-git rofi-git picom-jonaburg-git ttf-melso-nerd-font-powerlevel10k)
 
 is_installed() {
   pacman -Qi "$1" &> /dev/null
@@ -68,13 +62,18 @@ is_installed() {
 }
 
 printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
-for paquete in "${dependencias[@]}"
+for package in "${dependencias[@]}"
 do
-  if ! is_installed "$paquete"; then
-    sudo pacman -S "$paquete" --noconfirm
-    printf "\n"
+  if [[ $? > 2 ]]; then
+    printf "%s%sChecking for required AUR packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
+    for aurpackage in "${aurdependencias[@]}"
+
+do
+  if ! is_installed "$package"; then
+    sudo pacman -S "$package" --noconfirm && yay -S "$aurpackage" --noconfirm
+    printf "\n"/
   else
-    printf '%s%s is already installed on your system!%s\n' "${CGR}" "$paquete" "${CNC}"
+    printf '%s%s is already installed on your system!%s\n' "${CGR}" "$package" "${CNC}"
     sleep 1
   fi
 done
@@ -156,68 +155,68 @@ printf "Copying files to respective directories..\n"
 [ ! -d ~/.local/share/fonts ] && mkdir -p ~/.local/share/fonts
 [ ! -d ~/.local/share/asciiart ] && mkdir -p ~/.local/share/asciiart
 
-for archivos in ~/dots/config/*; do
-  cp -R "${archivos}" ~/.config/
+for files in ~/dots/config/*; do
+  cp -R "${files}" ~/.config/
   if [ $? -eq 0 ]; then
-	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${files}" "${CNC}"
 	sleep 1
   else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${files}" "${CNC}"
 	sleep 1
   fi
 done
 
-for archivos in ~/dots/misc/bin/*; do
-  cp -R "${archivos}" ~/.local/bin/
+for files in ~/dots/misc/bin/*; do
+  cp -R "${files}" ~/.local/bin/
   if [ $? -eq 0 ]; then
-	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${files}" "${CNC}"
 	sleep 1
   else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${files}" "${CNC}"
 	sleep 1
   fi
 done
 
-for archivos in ~/dots/misc/applications/*; do
-  cp -R "${archivos}" ~/.local/share/applications/
+for files in ~/dots/misc/applications/*; do
+  cp -R "${files}" ~/.local/share/applications/
   if [ $? -eq 0 ]; then
-	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${files}" "${CNC}"
 	sleep 1
   else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${files}" "${CNC}"
 	sleep 1
   fi
 done
 
-for archivos in ~/dots/misc/fonts/*; do
-  cp -R "${archivos}" ~/.local/share/fonts/
+for files in ~/dots/misc/fonts/*; do
+  cp -R "${files}" ~/.local/share/fonts/
   if [ $? -eq 0 ]; then
-	printf "%s%s%s copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	printf "%s%s%s copied succesfully!%s\n" "${BLD}" "${CGR}" "${files}" "${CNC}"
 	sleep 1
   else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${files}" "${CNC}"
 	sleep 1
   fi
 done
 
-for archivos in ~/dots/misc/asciiart/*; do
-  cp -R "${archivos}" ~/.local/share/asciiart/
+for files in ~/dots/misc/asciiart/*; do
+  cp -R "${files}" ~/.local/share/asciiart/
   if [ $? -eq 0 ]; then
-	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${files}" "${CNC}"
 	sleep 1
   else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${files}" "${CNC}"
 	sleep 1
   fi
 done
 
-for archivos in ~/dots/misc/firefox/*; do
-  cp -R "${archivos}" ~/.mozilla/firefox/*.default-release/
+for files in ~/dots/misc/firefox/*; do
+  cp -R "${files}" ~/.mozilla/firefox/*.default-release/
   if [ $? -eq 0 ]; then
-	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${files}" "${CNC}"
 	sleep 1
   else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${files}" "${CNC}"
 	sleep 1
   fi
 done
@@ -226,6 +225,11 @@ cp -f "$HOME"/dots/home/.zshrc "$HOME"
 fc-cache -rv >/dev/null 2>&1
 printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
 sleep 3
+
+# -=- powerlevel10k -=- #
+
+yay -S --noconfirm zsh-theme-powerlevel10k-git
+echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
 # -=- Changing shell to zsh -=- #
 
