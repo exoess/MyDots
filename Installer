@@ -52,7 +52,7 @@ clear
 
 logo "Installing needed packages.."
 
-dependencies=(papirus-icon-theme pulseaudio-alsa)
+dependencies=(papirus-icon-theme pulseaudio-alsa luarocks)
 
 aurdependencies=(awesome-git rofi-git picom-jonaburg-git ttf-melso-nerd-font-powerlevel10k)
 
