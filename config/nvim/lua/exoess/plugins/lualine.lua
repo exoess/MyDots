@@ -1,36 +1,41 @@
--- import lualine plugin safely
-local status, lualine = pcall(require, "lualine")
-if not status then
-  return
-end
-
--- get lualine catppuccin theme
-local lualine_catppuccin = require("lualine.themes.catppuccin")
-
--- new colors for theme
-local new_colors = {
-  blue = "#89b4fa",
-  green = "#a6e3a1",
-  violet = "#cba6f7",
-  yellow = "#fab387",
-  black = "#1e1e2e",
-}
-
--- change catppuccin theme colors
-lualine_catppuccin.normal.a.bg = new_colors.blue
-lualine_catppuccin.insert.a.bg = new_colors.green
-lualine_catppuccin.visual.a.bg = new_colors.violet
-lualine_catppuccin.command = {
-  a = {
-    gui = "bold",
-    bg = new_colors.yellow,
-    fg = new_colors.black, -- black
-  },
-}
-
--- configure lualine with modified theme
-lualine.setup({
+require('lualine').setup {
   options = {
-    theme = lualine_catppuccin,
+    icons_enabled = true,
+    theme = 'omni',
+    component_separators = { left = '|', right = '|'},
+    section_separators = { left = ' ', right = ' '},
+    disabled_filetypes = {
+      'NvimTree',
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
   },
-})
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}

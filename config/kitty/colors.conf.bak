@@ -1,0 +1,80 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+
+#: Color scheme {{{
+
+# foreground/background
+background              #191622
+foreground              #E1E1E6
+selection_background    #41414D
+selection_foreground    #E1E1E6
+
+# cursor
+cursor                  #F8F8F2
+cursor_text_color       background
+
+# url
+url_color               #FFB86C
+
+# borders
+# active_border_color
+# inactive_border_color
+# # bell_border_color
+
+# tabs
+active_tab_foreground   #191631
+active_tab_background   #E6E6E6
+inactive_tab_foreground #44476F
+inactive_tab_background #6272A4
+# tab_bar_background
+
+#: The color table {{{
+
+# black
+color0                  #000000
+color8                  #4D4D4D
+
+# red
+color1                  #FF5555
+color9                  #FF6E67
+
+# green
+color2                  #50FA7B
+color10                 #5AF78E
+
+# yellow
+color3                  #EFFA78
+color11                 #EAF08D
+
+# blue
+color4                  #BD93F9
+color12                 #CAA9FA
+
+# magenta
+color5                  #FF79C6
+color13                 #FF92D0
+
+# cyan
+color6                  #8D79BA
+color14                 #AA91E3
+
+# white
+color7                  #BFBFBF
+color15                 #E6E6E6
+
+# extended
+# color16
+# color17
+
+# marks
+mark1_foreground
+mark1_background
+
+mark2_foreground
+mark2_background
+
+mark3_foreground
+mark3_background
+
+#: }}}
+
+#: }}}

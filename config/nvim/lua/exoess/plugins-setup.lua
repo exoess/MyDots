@@ -32,25 +32,17 @@ return packer.startup(function(use)
 use("wbthomason/packer.nvim")
 
 -- theme
-use { "catppuccin/nvim", as = "catppuccin" }
+use("getomni/neovim")
 
--- file explorer
+-- plugins
 use("nvim-tree/nvim-tree.lua")
-
--- vs-code like icons
 use("nvim-tree/nvim-web-devicons")
-
--- statusline
-use ("nvim-lualine/lualine.nvim")
-
--- colorizer
-use'norcalli/nvim-colorizer.lua'
-
--- coc
-use {'neoclide/coc.nvim', branch = 'release'}
-
--- barbar
+use("nvim-lualine/lualine.nvim")
+use("norcalli/nvim-colorizer.lua")
+use{'neoclide/coc.nvim', branch = 'release'}
 use("romgrk/barbar.nvim")
+use("lifepillar/vim-colortemplate")
+use("rktjmp/lush.nvim")
 
  if packer_bootstrap then
     require("packer").sync()
